@@ -1,0 +1,15 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="SoftwareBot.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="ADMIN_ID" Type="System.String" Scope="User">
+      <Value Profile="(Default)">U0M4JPX6V</Value>
+    </Setting>
+    <Setting Name="APP_ID" Type="System.String" Scope="User">
+      <Value Profile="(Default)">xoxb-42585728802-DvvpknoN9zfusuVMtii62TKA</Value>
+    </Setting>
+    <Setting Name="BUILD_DATE" Type="System.DateTime" Scope="User">
+      <Value Profile="(Default)">12/29/2016 15:46:00</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

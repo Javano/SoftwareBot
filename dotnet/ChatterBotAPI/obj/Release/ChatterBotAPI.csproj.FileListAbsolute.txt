@@ -1,0 +1,2 @@
+C:\Users\adam.carruthers\Google Drive\Projects\C#\TestBot\dotnet\ChatterBotAPI\bin\Release\ChatterBotAPI.dll
+C:\Users\adam.carruthers\Google Drive\Projects\C#\TestBot\dotnet\ChatterBotAPI\obj\Release\ChatterBotAPI.dll

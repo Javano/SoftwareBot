@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.25928.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SoftwareBot", "TestBot\SoftwareBot.csproj", "{6198681C-B40F-44D4-A443-557620D96EB3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChatterBotAPI", "dotnet\ChatterBotAPI\ChatterBotAPI.csproj", "{2E624962-F155-432C-A90A-E1CE75DEE9EA}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{6198681C-B40F-44D4-A443-557620D96EB3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6198681C-B40F-44D4-A443-557620D96EB3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6198681C-B40F-44D4-A443-557620D96EB3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6198681C-B40F-44D4-A443-557620D96EB3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2E624962-F155-432C-A90A-E1CE75DEE9EA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2E624962-F155-432C-A90A-E1CE75DEE9EA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2E624962-F155-432C-A90A-E1CE75DEE9EA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2E624962-F155-432C-A90A-E1CE75DEE9EA}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(MonoDevelopProperties) = preSolution
+		StartupItem = ChatterBotAPITestVB\ChatterBotAPITestVB.vbproj
+	EndGlobalSection
+	GlobalSection(MonoDevelopProperties) = preSolution
+		StartupItem = ChatterBotAPITestVB\ChatterBotAPITestVB.vbproj
+	EndGlobalSection
+EndGlobal
