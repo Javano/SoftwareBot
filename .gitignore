@@ -33,5 +33,5 @@ Thumbs.db
 
 # Custom #
 ######################
-*App.config*
+api.key
 TestBot\bin\*

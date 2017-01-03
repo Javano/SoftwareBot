@@ -37,19 +37,7 @@ namespace SoftwareBot.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("xoxb-42585728802-DvvpknoN9zfusuVMtii62TKA")]
-        public string APP_ID {
-            get {
-                return ((string)(this["APP_ID"]));
-            }
-            set {
-                this["APP_ID"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("12/29/2016 15:46:00")]
+        [global::System.Configuration.DefaultSettingValueAttribute("2017-01-03")]
         public global::System.DateTime BUILD_DATE {
             get {
                 return ((global::System.DateTime)(this["BUILD_DATE"]));

@@ -13,6 +13,7 @@ namespace SoftwareBot
     public class SoftwareBot : Bot
     {
         public const string ADMIN_ID = "U0M4JPX6V";
+        private string API_KEY = "";
         private BindingList<ScheduledItem> scheduledItems = new BindingList<ScheduledItem>();
         Timer timer;
         public SoftwareBot()
@@ -24,12 +25,18 @@ namespace SoftwareBot
             Console.Error.WriteLine("Hello, I am SoftwareBot. -- I was unleashed upon the world by Adam Carruthers.\n");
             Console.Error.WriteLine("My build date is: " + Properties.Settings.Default.BUILD_DATE + "\n");
 
-            timer = new Timer((e) => {
+            System.IO.StreamReader file = new System.IO.StreamReader("api.key");
+            API_KEY = file.ReadLine();
+
+            /*
+                timer = new Timer((e) => {
                 CheckScheduledEvents();
             }, null, 0, 60 * 1000);
 
             //    loadScheduledItems(); *****************************************************
             scheduledItems.ListChanged += ScheduledItemsChanged;
+
+            */
             TimeResponder timeResponder = new TimeResponder();
             ConnectionStatusChanged += (bool isConnected) =>
             {
@@ -111,7 +118,7 @@ namespace SoftwareBot
             Console.Error.WriteLine("Attempting to connect to Slack now...\n");
             try
             {
-                Connect(Properties.Settings.Default.APP_ID);
+                Connect(API_KEY);
             }
             catch (Exception ex)
             {
@@ -191,7 +198,7 @@ namespace SoftwareBot
                 Console.Error.WriteLine("Trying to reconnect now.\n");
                 try
                 {
-                    Connect(Properties.Settings.Default.APP_ID);
+                    Connect(API_KEY);
                 } catch(Exception ex)
                 {
                     Console.Error.WriteLine("Connection attempt failed! Press ENTER if you would like me to try again.\n" + "[" + ex.Message + "]\n");
