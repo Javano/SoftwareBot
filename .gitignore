@@ -34,4 +34,5 @@ Thumbs.db
 # Custom #
 ######################
 api.key
-TestBot\bin\*
+*\bin\*
+*\obj\*
