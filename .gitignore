@@ -279,4 +279,4 @@ __pycache__/
 api.key
 
 # Ignore Design time resolve assembly.
-DesignTimeResolveAssemblyReferencesInput.cache
+**/DesignTimeResolveAssemblyReferencesInput.cache
