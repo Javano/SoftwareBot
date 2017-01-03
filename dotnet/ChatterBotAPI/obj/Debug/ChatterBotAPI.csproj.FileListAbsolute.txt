@@ -1,5 +1,0 @@
-C:\Users\adam.carruthers\Google Drive\Projects\C#\TestBot\dotnet\ChatterBotAPI\bin\Debug\ChatterBotAPI.dll
-C:\Users\adam.carruthers\Google Drive\Projects\C#\TestBot\dotnet\ChatterBotAPI\bin\Debug\ChatterBotAPI.pdb
-C:\Users\adam.carruthers\Google Drive\Projects\C#\TestBot\dotnet\ChatterBotAPI\obj\Debug\ChatterBotAPI.csprojResolveAssemblyReference.cache
-C:\Users\adam.carruthers\Google Drive\Projects\C#\TestBot\dotnet\ChatterBotAPI\obj\Debug\ChatterBotAPI.dll
-C:\Users\adam.carruthers\Google Drive\Projects\C#\TestBot\dotnet\ChatterBotAPI\obj\Debug\ChatterBotAPI.pdb
