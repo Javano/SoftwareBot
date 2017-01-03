@@ -274,5 +274,9 @@ __pycache__/
 # Cake - Uncomment if you are using it
 # tools/
 
+# Custom section
 # Ignore token.
 api.key
+
+# Ignore Design time resolve assembly.
+DesignTimeResolveAssemblyReferencesInput.cache
