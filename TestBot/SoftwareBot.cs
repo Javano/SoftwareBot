@@ -43,7 +43,7 @@ namespace SoftwareBot
                     Console.Error.WriteLine("If these issues persist, please try restarting me.\n");
                 }
                 Console.Error.WriteLine("----------------------------------------------------------------\n");
-
+                
                 if (IsConnected)
                 {
 

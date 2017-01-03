@@ -37,7 +37,7 @@ namespace SoftwareBot.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("xoxb-42585728802-DvvpknoN9zfusuVMtii62TKA")]
+        [global::System.Configuration.DefaultSettingValueAttribute("xoxb-42585728802-4W0UrFo5XJdDlfEwP5hBFcVj")]
         public string APP_ID {
             get {
                 return ((string)(this["APP_ID"]));
