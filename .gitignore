@@ -277,11 +277,8 @@ __pycache__/
 # Custom section
 # Ignore token.
 api.key
-<<<<<<< HEAD
 *\bin\*
 *\obj\*
-=======
 
 # Ignore Design time resolve assembly.
 **/DesignTimeResolveAssemblyReferencesInput.cache
->>>>>>> origin/master

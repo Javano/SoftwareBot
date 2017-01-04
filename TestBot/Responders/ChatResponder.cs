@@ -49,6 +49,11 @@ namespace SoftwareBot
             thought = thought.Replace("softwarebot", "CleverBot");
             thought = thought.Replace("Softwarebot", "CleverBot");
             thought = bot1session.Think(thought);
+            thought = thought.Replace("CleverBot", "SoftwareBot");
+            thought = thought.Replace("cleverbot", "SoftwareBot");
+            thought = thought.Replace("Clever Bot", "SoftwareBot");
+            thought = thought.Replace("clever bot", "SoftwareBot");
+            thought = thought.Replace("clever bot", "SoftwareBot");
             var builder = new StringBuilder();
             // builder.Append("Hello ").Append(context.Message.User.FormattedUserID);
             builder.Append(thought); 
