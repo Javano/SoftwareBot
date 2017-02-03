@@ -30,13 +30,15 @@ namespace SoftwareBot
             {
                 try { 
                     ISBResponder r2 = (ISBResponder)r;
-                    builder.Append("`").Append(r2.getUsage()).Append("`\n```").Append(r2.getDescription()).Append("```\n");
+                    if (r2.getUsage() != null && r2.getDescription() != null)
+                    {
+                        builder.Append("`").Append(r2.getUsage()).Append("`\n```").Append(r2.getDescription()).Append("```\n");
+                    }
                 } catch (Exception) 
                 {
 
                 } 
             }
-            // builder.Append("Hello ").Append(context.Message.User.FormattedUserID);
             return new BotMessage { Text = builder.ToString() };
         }
 

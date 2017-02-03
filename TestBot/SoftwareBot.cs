@@ -37,7 +37,7 @@ namespace SoftwareBot
             scheduledItems.ListChanged += ScheduledItemsChanged;
 
             */
-            TimeResponder timeResponder = new TimeResponder();
+            UsernameCacheResponder usernameCache = new UsernameCacheResponder();
             ConnectionStatusChanged += (bool isConnected) =>
             {
                 if (IsConnected)
@@ -60,14 +60,14 @@ namespace SoftwareBot
             };
             Aliases = new List<string>() { "SoftwareBot", "Software Bot" };
 
-            Responders.Add(timeResponder);
+            Responders.Add(usernameCache);
             Responders.Add(new HelpResponder(Responders));
             //Responders.Add(new SchedulerResponder(scheduledItems));
             Responders.Add(new TaskResponder());
             Responders.Add(new ChatResponder());
             //Responders.Add(new AdminResponder(this));
             //Responders.Add(new TfsBuildResponder());
-            //Responders.Add(new OneNoteResponder());
+            Responders.Add(new OneNoteResponder());
 
             Console.Error.WriteLine("The features that are included in this build are:\n");
             foreach (IResponder r in Responders)
@@ -88,10 +88,10 @@ namespace SoftwareBot
                     {
                         string userID = (string)jObj["user"];
 
-                        if (userID != null && timeResponder.userNameCache.ContainsKey(userID))
+                        if (userID != null && usernameCache.userNameCache.ContainsKey(userID))
                         {
                             //  Console.Error.WriteLine("[" + DateTime.Now + "] - " + timeResponder.userNameCache[(string)jObj["user"]] + ": " + jObj["text"]);
-                            Console.Error.WriteLine("[" + DateTime.Now + "] - " + timeResponder.userNameCache[(string)jObj["user"]] + " <MESSAGE RECEIVED>");
+                            Console.Error.WriteLine("[" + DateTime.Now + "] - " + usernameCache.userNameCache[(string)jObj["user"]] + " <MESSAGE RECEIVED>");
                         }
                         else
                         {
