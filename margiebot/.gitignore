@@ -1,0 +1,19 @@
+# general directories
+obj/
+bin/
+Debug/
+Release/
+.vs/
+
+# directories at a specific level
+/packages
+
+# extensions
+*.suo
+*.user
+*.pdb
+*.dll
+
+# specific files
+project.lock.json
+config.json
