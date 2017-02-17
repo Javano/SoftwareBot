@@ -37,7 +37,7 @@ namespace SoftwareBot.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("02/16/2017 12:45:00")]
+        [global::System.Configuration.DefaultSettingValueAttribute("02/17/2017 09:29:00")]
         public global::System.DateTime BUILD_DATE {
             get {
                 return ((global::System.DateTime)(this["BUILD_DATE"]));
