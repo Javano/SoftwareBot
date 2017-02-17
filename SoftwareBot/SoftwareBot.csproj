@@ -238,10 +238,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\chatter-bot-api\dotnet\ChatterBotAPI\ChatterBotAPI.csproj">
-      <Project>{2e624962-f155-432c-a90a-e1ce75dee9ea}</Project>
-      <Name>ChatterBotAPI</Name>
-    </ProjectReference>
     <ProjectReference Include="..\margiebot\MargieBot\MargieBot.csproj">
       <Project>{27697487-1db2-4ceb-845f-46163732ac39}</Project>
       <Name>MargieBot</Name>

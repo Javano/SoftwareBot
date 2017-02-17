@@ -14,6 +14,7 @@ namespace SoftwareBot
     {
         public const string ADMIN_ID = "U0M4JPX6V";
         private string API_KEY = "";
+        private string CLEVERBOT_API_KEY = "";
         private BindingList<ScheduledItem> scheduledItems = new BindingList<ScheduledItem>();
         Timer timer;
         public SoftwareBot()
@@ -26,8 +27,10 @@ namespace SoftwareBot
             Console.Error.WriteLine("My build date is: " + Properties.Settings.Default.BUILD_DATE + "\n");
 
             System.IO.StreamReader file = new System.IO.StreamReader("api.key");
-            Console.Error.WriteLine("API Key found. \n");
             API_KEY = file.ReadLine();
+            Console.Error.WriteLine("Slack API Key found. \n");
+            CLEVERBOT_API_KEY = file.ReadLine();
+            Console.Error.WriteLine("Cleverbot API Key found. \n");
 
             /*
                 timer = new Timer((e) => {
@@ -71,7 +74,7 @@ namespace SoftwareBot
             Responders.Add(new ReactionResponder());
             //Responders.Add(new SchedulerResponder(scheduledItems));
             Responders.Add(new TaskResponder());
-            Responders.Add(new ChatResponder());
+            Responders.Add(new ChatResponder(CLEVERBOT_API_KEY));
             //Responders.Add(new AdminResponder(this));
             //Responders.Add(new TfsBuildResponder());
             Responders.Add(new OneNoteResponder());

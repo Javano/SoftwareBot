@@ -1,6 +1,7 @@
-﻿using ChatterBotAPI;
-using MargieBot;
+﻿using MargieBot;
 using System;
+using System.Net;
+using System.Net.Http;
 using System.Text;
 
 namespace SoftwareBot
@@ -8,13 +9,12 @@ namespace SoftwareBot
     public class ChatResponder : ISBResponder
     {
 
-        ChatterBotFactory factory = new ChatterBotFactory();
-        ChatterBotSession bot1session = null;
-        ChatterBot bot1 = null;
 
-        public ChatResponder()
+        private string API_URI_SUFFIX;
+        private string API_URI = "http://www.cleverbot.com/";
+        public ChatResponder(string apiKey)
         {
-            
+            API_URI_SUFFIX = "getreply?key=" + apiKey;
         }
 
         public bool CanRespond(ResponseContext context)
@@ -30,19 +30,10 @@ namespace SoftwareBot
 
         public BotMessage GetResponse(ResponseContext context)
         {
-            
+
             var builder = new StringBuilder();
             try
             {
-                if (bot1 == null)
-                {
-                    bot1 = factory.Create(ChatterBotType.CLEVERBOT);
-                }
-
-                if (bot1session == null)
-                {
-                    bot1session = bot1.CreateSession();
-                }
 
                 string removeString = @"<@U18H7MEPL>";
                 int index = context.Message.Text.IndexOf(removeString);
@@ -60,7 +51,15 @@ namespace SoftwareBot
                 thought = thought.Replace("Softwarebot", "CleverBot");
 
 
-                    thought = bot1session.Think(thought);
+                using (var client = new HttpClient(new HttpClientHandler { AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate }))
+                {
+                    client.BaseAddress = new Uri(API_URI);
+                    HttpResponseMessage response = client.GetAsync(API_URI_SUFFIX + "&input=" + thought).Result;
+                    response.EnsureSuccessStatusCode();
+                    string result = response.Content.ReadAsStringAsync().Result;
+                    dynamic respObj = Newtonsoft.Json.JsonConvert.DeserializeObject(result);
+                    thought = respObj["output"];
+                }
 
                 thought = thought.Replace("CleverBot", "SoftwareBot");
                 thought = thought.Replace("cleverbot", "SoftwareBot");

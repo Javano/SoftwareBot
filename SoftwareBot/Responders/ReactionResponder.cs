@@ -1,8 +1,7 @@
-﻿using ChatterBotAPI;
+﻿
 using MargieBot;
 using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace SoftwareBot
 {
