@@ -33,15 +33,14 @@ namespace SoftwareBot
             {
                 throw new ArgumentNullException("info");
             }
-            SlackChatHubType hubType;
-            Enum.TryParse< SlackChatHubType>(info.GetString("ChatHub_Type"), out hubType);
+            Enum.TryParse<SlackChatHubType>(info.GetString("ChatHub_Type"), out SlackChatHubType hubType);
             content = info.GetString("Content");
             chatHub =  new SlackChatHub() { ID = info.GetString("ChatHub_ID"), Name = info.GetString("ChatHub_Name"), Type = hubType };
             date = info.GetDateTime("Date");
             repeatMode = info.GetInt32("RepeatMode");
         }
 
-        public void reschedule()
+        public void Reschedule()
         {
             switch (repeatMode)
             {
