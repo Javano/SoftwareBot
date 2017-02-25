@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace SoftwareBot
 {
-    public class ReactionResponder : ISBResponder
+    public class ReactionResponder : SBResponder
     {
         Dictionary<string,string> reactDict = new Dictionary<string, string>();
         string reactionName = String.Empty;
@@ -22,12 +22,9 @@ namespace SoftwareBot
             reactDict.Add("easy", "easy_button");
         }
 
-        public bool CanRespond(ResponseContext context)
-        {
-            return false;
-        }
+ 
 
-        public bool CanReact(ResponseContext context)
+        public override bool CanReact(ResponseContext context)
         {
             foreach(string key in reactDict.Keys)
             {
@@ -41,12 +38,8 @@ namespace SoftwareBot
                 && !context.BotHasReacted;
         }
 
-        public BotMessage GetResponse(ResponseContext context)
-        {
-            return new BotMessage { };
-        }   
 
-        public BotReaction GetReaction(ResponseContext context)
+        public override BotReaction GetReaction(ResponseContext context)
         {
             BotReaction react = new BotReaction();
             dynamic rData = Newtonsoft.Json.JsonConvert.DeserializeObject(context.Message.RawData);
@@ -62,15 +55,6 @@ namespace SoftwareBot
             return react;
         }
 
-
-        public string getUsage()
-        {
-            return null;
-        }
-        public string getDescription()
-        {
-            return null;
-        }
         public override string ToString()
         {
             return "Reaction Responder";

@@ -10,7 +10,7 @@ using MargieBot;
 
 namespace SoftwareBot
 {
-    public class TfsBuildResponder : ISBResponder
+    public class TfsBuildResponder : SBResponder
     {
         List<string> taskNums = new List<string>();
         #region Constants
@@ -32,7 +32,7 @@ namespace SoftwareBot
 [for name] must be the last parameter, since it will treat all words after 'for' as a name.";
         #endregion
 
-        public bool CanRespond(ResponseContext context)
+        public override bool CanRespond(ResponseContext context)
         {
             bool IsBotRespond = !context.BotHasResponded;
             bool IsBotMentioned = context.Message.MentionsBot;
@@ -40,18 +40,14 @@ namespace SoftwareBot
 
             return IsBotMentioned && IsBotRespond && IsCommandIssued;
         }
-        public bool CanReact(ResponseContext context)
-        {
-            return false;
-        }
-        public BotReaction GetReaction(ResponseContext context) { return new BotReaction(); }
+
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="context"></param>
         /// <returns></returns>
-        public BotMessage GetResponse(ResponseContext context)
+        public override BotMessage GetResponse(ResponseContext context)
         {
             BotMessage message = new BotMessage();
             Match match = BUILD_MASK.Match(context.Message.Text);
@@ -85,12 +81,14 @@ namespace SoftwareBot
 
                 message.Text = $"<@{context.Message.User.ID}> Project *{project}* in Collection *{collection}*. Build result(s) from *{person}*.";
 
-                ArrayList list = getBuilds(collection, project, fullName, startDate, endDate);
+                ArrayList list = GetBuilds(collection, project, fullName, startDate, endDate);
 
                 if (list.Count == 0)
                 {
-                    SlackAttachment sa = new SlackAttachment();
-                    sa.Text = "Really empty here...";
+                    SlackAttachment sa = new SlackAttachment()
+                    {
+                        Text = "Really empty here..."
+                    };
                     message.Attachments.Add(sa);
                 }
                 else
@@ -103,8 +101,10 @@ namespace SoftwareBot
                         }
                         else
                         {
-                            SlackAttachment sa = new SlackAttachment();
-                            sa.Text = "... and more";
+                            SlackAttachment sa = new SlackAttachment()
+                            {
+                                Text = "... and more"
+                            };
                             message.Attachments.Add(sa);
                             break;
                         }
@@ -123,18 +123,16 @@ namespace SoftwareBot
 
 
 
-        protected ArrayList getBuilds(string collection, string project, string username, string startDate, string endDate)
+        protected ArrayList GetBuilds(string collection, string project, string username, string startDate, string endDate)
         {
             ArrayList list = new ArrayList();
             
 
             try
             {
-                
-                DateTime buildStartDate;
-                DateTime buildEndDate;
-                bool IsMinBuildFinishTimeExists = DateTime.TryParseExact(startDate, DATE_PATTERN, null, System.Globalization.DateTimeStyles.None, out buildStartDate);
-                bool IsMaxBuildFinishTimeExists = DateTime.TryParseExact(endDate, DATE_PATTERN, null, System.Globalization.DateTimeStyles.None, out buildEndDate);
+
+                bool IsMinBuildFinishTimeExists = DateTime.TryParseExact(startDate, DATE_PATTERN, null, System.Globalization.DateTimeStyles.None, out DateTime buildStartDate);
+                bool IsMaxBuildFinishTimeExists = DateTime.TryParseExact(endDate, DATE_PATTERN, null, System.Globalization.DateTimeStyles.None, out DateTime buildEndDate);
                 VssConnection connection = new VssConnection(new Uri($"http://tfs.itracks.com:8080/tfs/{collection}"), new VssAadCredential());
                 var projectClient = connection.GetClient<ProjectHttpClient>();
                 var target = projectClient.GetProject(project).Result;
@@ -240,11 +238,12 @@ namespace SoftwareBot
                     IsInnerException = "Not Warped";
                 }
 
-                SlackAttachmentField field = new SlackAttachmentField();
-                field.Title = $"Exception Class:{ie.GetType().ToString()}";
-                field.Value = $"HResult: {ie.HResult.ToString()}";
-                field.IsShort = false;
-
+                SlackAttachmentField field = new SlackAttachmentField()
+                {
+                    Title = $"Exception Class:{ie.GetType().ToString()}",
+                    Value = $"HResult: {ie.HResult.ToString()}",
+                    IsShort = false
+                };
                 SlackAttachmentField ErrorType = new SlackAttachmentField();
                 field.Title = $"Exception Source:";
                 field.Value = $"{IsInnerException}";
@@ -261,8 +260,8 @@ namespace SoftwareBot
                 return list;
             }
         }
-        public string getUsage() => USAGE;
-        public string getDescription() => DESCRIPTION;
+        public override string GetUsage() => USAGE;
+        public override string GetDescription() => DESCRIPTION;
         public override string ToString() => CLASSTOSTRING;
     }
 }

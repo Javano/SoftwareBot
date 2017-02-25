@@ -4,8 +4,8 @@ namespace SoftwareBot
 {
     public interface ISBResponder : IResponder
     {
-        string getUsage();
-        string getDescription();
+        string GetUsage();
+        string GetDescription();
 
     }
 }

@@ -3,23 +3,19 @@ using System.Text.RegularExpressions;
 
 namespace SoftwareBot
 {
-    public class OneNoteResponder : ISBResponder
+    public class OneNoteResponder : SBResponder
     {
         private static Regex ONENOTE_MASK = new Regex(@"onenote\:\<(?<OneNoteLink>http.+)\>");
         private static string USAGE = "Automatically detect keywords in message";
         private static string CLASSTOSTRING = "OneNote linker responder";
         private static string DESCRIPTION = "Post a link to directly open the OneNote page.";
-        public bool CanRespond(ResponseContext context)
+        public override bool CanRespond(ResponseContext context)
         {
             
             return ONENOTE_MASK.IsMatch(context.Message.Text);
         }
-        public bool CanReact(ResponseContext context)
-        {
-            return false;
-        }
-        public BotReaction GetReaction(ResponseContext context) { return new BotReaction(); }
-        public BotMessage GetResponse(ResponseContext context)
+
+        public override BotMessage GetResponse(ResponseContext context)
         {
             MatchCollection matches = ONENOTE_MASK.Matches(context.Message.Text);
             if (matches.Count > 0)
@@ -28,8 +24,10 @@ namespace SoftwareBot
                 int i = 1;                
                 foreach (Match match in matches)
                 {
-                    SlackAttachment attachment = new SlackAttachment();
-                    attachment.Title = $"Open in OneNote ({i}/{matches.Count})";
+                    SlackAttachment attachment = new SlackAttachment()
+                    {
+                        Title = $"Open in OneNote ({i}/{matches.Count})"
+                    };
                     string onenoteLink = match.Groups["OneNoteLink"].Value;
                     onenoteLink.Replace("&", "&amp;");
                     onenoteLink = "onenote://" + onenoteLink;
@@ -46,8 +44,8 @@ namespace SoftwareBot
             }
         }
 
-        public string getUsage() => USAGE;
-        public string getDescription() => DESCRIPTION;
+        public override string GetUsage() => USAGE;
+        public override string GetDescription() => DESCRIPTION;
         public override string ToString() => CLASSTOSTRING;
     }
 }

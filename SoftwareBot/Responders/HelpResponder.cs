@@ -5,7 +5,7 @@ using System.Text;
 
 namespace SoftwareBot
 {
-    public class HelpResponder : ISBResponder
+    public class HelpResponder : SBResponder
     {
         private List<IResponder> responders;
 
@@ -14,20 +14,16 @@ namespace SoftwareBot
             this.responders = responders;
         }
 
-        public bool CanRespond(ResponseContext context)
+        public override bool CanRespond(ResponseContext context)
         {
             return !context.BotHasResponded
                 && context.Message.MentionsBot
                   && (context.Message.Text.ToLower().Contains("help") || context.Message.Text.ToLower().Contains("commands"));
         }
-        public bool CanReact(ResponseContext context)
-        {
-            return false;
-        }
-        public BotReaction GetReaction(ResponseContext context) { return new BotReaction(); }
 
 
-            public BotMessage GetResponse(ResponseContext context)
+
+            public override BotMessage GetResponse(ResponseContext context)
         {
             var builder = new StringBuilder();
             builder.Append("Available Commands:\n");
@@ -35,9 +31,9 @@ namespace SoftwareBot
             {
                 try { 
                     ISBResponder r2 = (ISBResponder)r;
-                    if (r2.getUsage() != null && r2.getDescription() != null)
+                    if (r2.GetUsage() != null && r2.GetDescription() != null)
                     {
-                        builder.Append("`").Append(r2.getUsage()).Append("`\n```").Append(r2.getDescription()).Append("```\n");
+                        builder.Append("`").Append(r2.GetUsage()).Append("`\n```").Append(r2.GetDescription()).Append("```\n");
                     }
                 } catch (Exception) 
                 {
@@ -47,11 +43,11 @@ namespace SoftwareBot
             return new BotMessage { Text = builder.ToString() };
         }
 
-        public string getUsage()
+        public override string GetUsage()
         {
             return "@SoftwareBot help";
         }
-        public string getDescription()
+        public override string GetDescription()
         {
             return "Responds with a list of available commands.";
         }

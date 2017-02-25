@@ -1,5 +1,4 @@
 ﻿using System;
-
 namespace SoftwareBot
 {
     public class Program

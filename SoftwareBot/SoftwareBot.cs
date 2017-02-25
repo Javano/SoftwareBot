@@ -71,7 +71,7 @@ namespace SoftwareBot
             Responders.Add(usernameCache);
             //Responders.Add(new ReactResponder());
             Responders.Add(new HelpResponder(Responders));
-            Responders.Add(new ReactionResponder());
+            //Responders.Add(new ReactionResponder());
             //Responders.Add(new SchedulerResponder(scheduledItems));
             Responders.Add(new TaskResponder());
             Responders.Add(new ChatResponder(CLEVERBOT_API_KEY));
@@ -127,7 +127,7 @@ namespace SoftwareBot
 
             Console.Error.WriteLine("Attempting to connect to Slack now...\n");
 
-                Connect(API_KEY);
+            DoConnect();
 
 
 
@@ -204,7 +204,7 @@ namespace SoftwareBot
                 Console.Error.WriteLine("Trying to reconnect now.\n");
                 try
                 {
-                    Connect(API_KEY);
+                    DoConnect();
                 } catch(Exception ex)
                 {
                     Console.Error.WriteLine("Connection attempt failed! Press ENTER if you would like me to try again.\n" + "[" + ex.Message + "]\n");
@@ -271,6 +271,9 @@ namespace SoftwareBot
 
         }
 
-
+        private async void DoConnect()
+        {
+            await Connect(API_KEY);
+        }
     }
 }

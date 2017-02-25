@@ -12,7 +12,7 @@ using MargieBot;
 
 namespace SoftwareBot
 {
-    public class TaskResponder : ISBResponder
+    public class TaskResponder : SBResponder
     {
         List<string> taskNums = new List<string>();
         #region CONSTANTS
@@ -22,7 +22,7 @@ namespace SoftwareBot
         private static string HTML_MARKER = @"<[^>]*>";
         private static Regex TASK_MASK = new Regex(@"\@\d+");
         #endregion
-        public bool CanRespond(ResponseContext context)
+        public override bool CanRespond(ResponseContext context)
         {
             taskNums = new List<string>();
             string messageLwr = context.Message.Text.ToLower();
@@ -33,13 +33,9 @@ namespace SoftwareBot
 
             return (taskNums.Count > 0 && !context.BotHasResponded);
         }
-        public bool CanReact(ResponseContext context)
-        {
-            return false;
-        }
-        public BotReaction GetReaction(ResponseContext context) { return new BotReaction(); }
 
-        public BotMessage GetResponse(ResponseContext context)
+
+        public override BotMessage GetResponse(ResponseContext context)
         {
 
             VssConnection connection = new VssConnection(new Uri("http://tfs.itracks.com:8080/tfs/MainProjects"), new VssAadCredential());
@@ -130,8 +126,10 @@ namespace SoftwareBot
                 }
                 else
                 {
-                    SlackAttachment workitem = new SlackAttachment();
-                    workitem.Text = "Pretty empty here...";
+                    SlackAttachment workitem = new SlackAttachment()
+                    {
+                        Text = "Pretty empty here..."
+                    };
                     message.Attachments.Add(workitem);
                 }
                 
@@ -152,11 +150,12 @@ namespace SoftwareBot
                     IsInnerException = "Not Warped";
                 }
 
-                SlackAttachmentField field = new SlackAttachmentField();
-                field.Title = $"Exception Class:{ie.GetType().ToString()}";
-                field.Value = $"HResult: {ie.HResult.ToString()}";
-                field.IsShort = false;
-
+                SlackAttachmentField field = new SlackAttachmentField()
+                {
+                    Title = $"Exception Class:{ie.GetType().ToString()}",
+                    Value = $"HResult: {ie.HResult.ToString()}",
+                    IsShort = false
+                };
                 SlackAttachmentField ErrorType = new SlackAttachmentField();
                 field.Title = $"Exception Source:";
                 field.Value = $"{IsInnerException}";
@@ -195,8 +194,8 @@ namespace SoftwareBot
             return message;
         }
 
-        public string getUsage() => USAGE;
-        public string getDescription() => DESCRIPTION;
+        public override string GetUsage() => USAGE;
+        public override string GetDescription() => DESCRIPTION;
         public override string ToString() => CLASSTOSTRING;
     }
 }

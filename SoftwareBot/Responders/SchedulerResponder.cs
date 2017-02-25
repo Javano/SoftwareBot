@@ -8,7 +8,7 @@ using System.Text.RegularExpressions;
 
 namespace SoftwareBot
 {
-    public class SchedulerResponder : ISBResponder
+    public class SchedulerResponder : SBResponder
     {
         DateTime scheduleDate = DateTime.MinValue;
         string content = "";
@@ -20,12 +20,8 @@ namespace SoftwareBot
             this.schedule = schedule;
         }
 
-        public bool CanReact(ResponseContext context)
-        {
-            return false;
-        }
-        public BotReaction GetReaction(ResponseContext context) { return new BotReaction(); }
-        public bool CanRespond(ResponseContext context)
+
+        public override bool CanRespond(ResponseContext context)
         {
             userNameCache = context.UserNameCache;
 
@@ -71,7 +67,7 @@ namespace SoftwareBot
                       && context.Message.Text.Contains("schedule");
         }
 
-        public BotMessage GetResponse(ResponseContext context)
+        public override BotMessage GetResponse(ResponseContext context)
         {
             var builder = new StringBuilder();
             if (scheduleDate != DateTime.MinValue)
@@ -111,11 +107,11 @@ namespace SoftwareBot
             return new BotMessage { Text = builder.ToString()};
         }
 
-        public string getUsage()
+        public override string GetUsage()
         {
             return "@SoftwareBot schedule {DATE} {TIME} {?REPEAT?} {MESSAGE}";
         }
-        public string getDescription()
+        public override string GetDescription()
         {
             return "Schedules the specified message to be sent at the given date and time.\n\t-DATE/TIME: MM/DD/YYYY HH:MM. \n\t-REPEAT: Hourly, Daily, Weekly, Monthly, Yearly.";
         }

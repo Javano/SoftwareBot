@@ -6,7 +6,7 @@ using System.Text;
 
 namespace SoftwareBot
 {
-    public class ChatResponder : ISBResponder
+    public class ChatResponder : SBResponder
     {
 
 
@@ -17,18 +17,14 @@ namespace SoftwareBot
             API_URI_SUFFIX = "getreply?key=" + apiKey;
         }
 
-        public bool CanRespond(ResponseContext context)
+        public override bool CanRespond(ResponseContext context)
         {
             return !context.BotHasResponded
                   && context.Message.MentionsBot;
         }
 
-        public bool CanReact(ResponseContext context)
-        {
-            return false;
-        }
 
-        public BotMessage GetResponse(ResponseContext context)
+        public override BotMessage GetResponse(ResponseContext context)
         {
 
             var builder = new StringBuilder();
@@ -90,7 +86,7 @@ namespace SoftwareBot
             return reply;
         }   
 
-        public BotReaction GetReaction(ResponseContext context)
+        public override BotReaction GetReaction(ResponseContext context)
         {
             BotReaction react = new BotReaction();
             dynamic rData = Newtonsoft.Json.JsonConvert.DeserializeObject(context.Message.RawData);
@@ -104,16 +100,15 @@ namespace SoftwareBot
             }
             return react;
         }
-        public string getUsage()
+        public override string GetUsage()
         {
             return "@SoftwareBot {MESSAGE}";
         }
 
-        public string getDescription()
+        public override string GetDescription()
         {
             return "Prompts a reply from SoftwareBot.";
         }
-
 
         public override string ToString()
         {

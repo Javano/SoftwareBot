@@ -6,23 +6,19 @@ using System.Text;
 
 namespace SoftwareBot
 {
-    public class TimeResponder : ISBResponder
+    public class TimeResponder : SBResponder
     {
         public IReadOnlyDictionary<string, string> userNameCache = new Dictionary<string, string>();
-        public bool CanRespond(ResponseContext context)
+        public override bool CanRespond(ResponseContext context)
         {
             userNameCache = context.UserNameCache;
             return !context.BotHasResponded
                 && context.Message.MentionsBot
                   && context.Message.Text.ToLower().Contains("time");
         }
-        public bool CanReact(ResponseContext context)
-        {
-            return false;
-        }
-        public BotReaction GetReaction(ResponseContext context) { return new BotReaction(); }
 
-        public BotMessage GetResponse(ResponseContext context)
+
+        public override BotMessage GetResponse(ResponseContext context)
         {
             var builder = new StringBuilder();
             // builder.Append("Hello ").Append(context.Message.User.FormattedUserID);
@@ -30,11 +26,11 @@ namespace SoftwareBot
             return new BotMessage { Text = builder.ToString() };
         }
 
-        public string getUsage()
+        public override string GetUsage()
         {
             return "@SoftwareBot time";
         }
-        public string getDescription()
+        public override string GetDescription()
         {
             return "Responds with the current time.";
         }
