@@ -35,7 +35,26 @@ namespace SoftwareBot
                     message.Attachments.Add(attachment);
                     i++;
                 }
-                
+
+                // Manually fetch message JSON
+                dynamic rData = Newtonsoft.Json.JsonConvert.DeserializeObject(context.Message.RawData);
+
+
+                // Use the original's timestamp as the reply's default threading timestamp
+
+                /** Disabled because Onenote links shouldn't be threaded unless triggered in a thread.
+                if (rData["ts"] != null)
+                {
+                    string ts = rData["ts"];
+                    message.Thread_TS = ts;
+                } **/
+
+                // If the original message is already in a thread, just use that thread timestamp instead.
+                if (rData["thread_ts"] != null)
+                {
+                    string thread_ts = rData["thread_ts"];
+                    message.Thread_TS = thread_ts;
+                }
                 return message;
             }
             else

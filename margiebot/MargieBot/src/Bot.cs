@@ -129,8 +129,10 @@ namespace MargieBot
                     case "not_authed":
                     case "account_inactive":
                     case "invalid_auth":
-                        InvalidCredentialException exIC = new InvalidCredentialException(errorMessage);
-                        exIC.HelpLink = SlackRtmStartHelp;
+                        InvalidCredentialException exIC = new InvalidCredentialException(errorMessage)
+                        {
+                            HelpLink = SlackRtmStartHelp
+                        };
                         throw exIC;
                     case "invalid_arg_name":
                     case "invalid_array_arg":
@@ -138,12 +140,16 @@ namespace MargieBot
                     case "invalid_form_data":
                     case "invalid_post_type":
                     case "missing_post_type":
-                        ArgumentException exAE = new ArgumentException(errorMessage);
-                        exAE.HelpLink = SlackRtmStartHelp;
+                        ArgumentException exAE = new ArgumentException(errorMessage)
+                        {
+                            HelpLink = SlackRtmStartHelp
+                        };
                         throw exAE;
                     case "request_timeout":
-                        TimeoutException exTE = new TimeoutException(errorMessage);
-                        exTE.HelpLink = SlackRtmStartHelp;
+                        TimeoutException exTE = new TimeoutException(errorMessage)
+                        {
+                            HelpLink = SlackRtmStartHelp
+                        };
                         throw exTE;
                     default:
                         throw new Exception(errorMessage);
@@ -284,13 +290,15 @@ namespace MargieBot
                 else
                 {
                     hub = SlackChatHub.FromID(channelID);
-                    var hubs = new Dictionary<string, SlackChatHub>(ConnectedHubs.ToDictionary(kvp => kvp.Key, kvp => kvp.Value));
-                    hubs.Add(hub.ID, hub);
+                    var hubs = new Dictionary<string, SlackChatHub>(ConnectedHubs.ToDictionary(kvp => kvp.Key, kvp => kvp.Value))
+                    {
+                        { hub.ID, hub }
+                    };
                     ConnectedHubs = hubs;
                 }
 
                 // some messages may not have text or a user (like unfurled data from URLs)
-                var messageText = (jObject["text"] != null ? jObject["text"].Value<string>() : null);
+                var messageText = (jObject["text"]?.Value<string>());
 
                 SlackMessage message = new SlackMessage()
                 {
@@ -299,6 +307,8 @@ namespace MargieBot
                     MentionsBot = (messageText != null ? Regex.IsMatch(messageText, BotNameRegex, RegexOptions.IgnoreCase) : false),
                     RawData = json,
                     Text = messageText,
+                    Timestamp = (jObject["ts"]?.Value<string>()),
+                    Thread_TS = (jObject["thread_ts"]?.Value<string>()),
                     User = (jObject["user"] != null ? new SlackUser() { ID = jObject["user"].Value<string>() } : null)
                 };
 
@@ -378,6 +388,8 @@ namespace MargieBot
                 throw new ArgumentException($"When calling the {nameof(Say)}() method, the {nameof(message)} parameter must have its {nameof(message.ChatHub)} property set.");
             }
 
+
+
             var client = new NoobWebClient();
             var values = new List<string>() {
                     "token", SlackKey,
@@ -404,6 +416,7 @@ namespace MargieBot
                 values.Add(kv.Value);
             }
             /** END CUSTOM ATTRIBS *************************************************/
+
 
             await client.DownloadString(
                 "https://slack.com/api/chat.postMessage",
@@ -465,6 +478,99 @@ namespace MargieBot
                 RequestMethod.Post,
                 values.ToArray()
             );
+        }
+
+
+        public async Task DeleteLast(SlackChatHub chatHub)
+        {
+            var client = new NoobWebClient();
+            var values = new List<string>() {
+                    "token", SlackKey,
+                    "channel", chatHub.ID
+                };
+            string resp = "";
+            switch (chatHub.Type)
+            {
+                case (SlackChatHubType.Channel):
+                    resp = client.DownloadString(
+                        "https://slack.com/api/channels.history",
+                         RequestMethod.Post,
+                         values.ToArray()
+                    ).Result;
+                    break;
+                case (SlackChatHubType.DM):
+                    resp = client.DownloadString(
+                       "https://slack.com/api/im.history",
+                       RequestMethod.Post,
+                       values.ToArray()
+                    ).Result;
+                    break;
+                case (SlackChatHubType.Group):
+                    resp = client.DownloadString(
+                        "https://slack.com/api/groups.history",
+                        RequestMethod.Post,
+                        values.ToArray()
+                    ).Result;
+                    break;
+
+                default:
+                    Console.WriteLine("ERROR: Invalid ChatHubType: " + chatHub.Type);
+                    break;
+
+            }
+
+
+            string ts = "";
+            try
+            {
+                dynamic rObj = Newtonsoft.Json.JsonConvert.DeserializeObject(resp);
+                foreach (var m in rObj["messages"])
+                {
+                    if (m["user"] == "U18H7MEPL")
+                    {
+                        ts = m["ts"];
+                        break;
+                    }
+                }
+
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Error creating delete request!");
+                Console.WriteLine(e.Message);
+            }
+            await Delete(chatHub.ID, ts);
+        }
+
+        /// <summary>
+        /// Allows you to programmatically operate the bot. The bot will post the passed reaction in whichever "chat hub" (DM, channel, or group) the message specifies.
+        /// </summary>
+        /// <param name="message">The message you want to deletek.</param>
+
+
+        public async Task Delete(string chatHubID, string timestamp)
+        {
+
+            var client = new NoobWebClient();
+            var values = new List<string>() {
+                    "token", SlackKey,
+                    "channel", chatHubID,
+                    "ts", timestamp,
+                    "as_user", "true"
+                };
+            try
+            {
+                await client.DownloadString(
+                    "https://slack.com/api/chat.delete",
+                    RequestMethod.Post,
+                    values.ToArray()
+                );
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Error sending delete request!");
+                Console.WriteLine(e.Message);
+            }
         }
 
         /// <summary>

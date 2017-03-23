@@ -1,5 +1,9 @@
 ﻿using MargieBot;
 using System.Text;
+using SlackAPI;
+using System.Threading.Tasks;
+using System;
+using System.Diagnostics;
 
 namespace SoftwareBot
 {
@@ -10,27 +14,33 @@ namespace SoftwareBot
         {
             this.bot = bot;
         }
-        public override bool CanRespond(ResponseContext context)
+        public override bool CanReact(ResponseContext context)
         {
             string messageLwr = context.Message.Text.ToLower();
 
-            return (context.Message.User.ID.Equals(Properties.Settings.Default.ADMIN_ID) && context.Message.Text.StartsWith("command: ") &&  !context.BotHasResponded);
+            return (context.Message.MentionsBot && context.Message.Text.Contains("/") &&  !context.BotHasReacted);
         }
 
-        public override BotMessage GetResponse(ResponseContext context)
+        public override BotReaction GetReaction(ResponseContext context)
         {
-            var builder = new StringBuilder();
-            string commandStr = context.Message.Text.Substring(10);
-            bot.DoCommand(commandStr);
-            builder.Append("Command Processed: \"" + commandStr + "\"");
-
-            return new BotMessage { Text = builder.ToString() };
+            string messageStr = context.Message.Text.ToLower();
+            if (messageStr.Contains("/delete"))
+            {
+                bot.DeleteLast(context.Message.ChatHub);
+            }
+            else if (messageStr.Contains("/kill"))
+            {
+                bot.Disconnect();
+                Environment.Exit(123);
+            }
+                return new BotReaction { Name = "white_check_mark", Timestamp=context.Message.Timestamp };
         }
 
         public override string ToString()
         {
             return "Administration Interface";
         }
+
 
     }
 }

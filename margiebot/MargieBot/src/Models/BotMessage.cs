@@ -9,6 +9,7 @@ namespace MargieBot
         public string Text { get; set; }
 
         /** CUSTOM MEMBERS ****************************************/
+        public string Timestamp { get; set; }
         public string Thread_TS { get; set; }
         public IList<KeyValuePair<string, string>> Custom_Attibs { get; set; }
         /** END CUSTOM MEMBERS ************************************/

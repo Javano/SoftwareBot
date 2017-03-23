@@ -19,7 +19,8 @@ namespace SoftwareBot
 
         public override bool CanRespond(ResponseContext context)
         {
-            return !context.BotHasResponded
+            return !context.BotHasResponded 
+                && !context.BotHasReacted
                   && context.Message.MentionsBot;
         }
 
@@ -71,16 +72,14 @@ namespace SoftwareBot
             }
             BotMessage reply = new BotMessage { Text = builder.ToString() };
 
-            dynamic rData = Newtonsoft.Json.JsonConvert.DeserializeObject(context.Message.RawData);
-            string thread = rData["thread_ts"];
-            string ts = rData["ts"];
-            if (ts != null && ts != String.Empty)
+
+            if (context.Message.Timestamp != null && context.Message.Timestamp != String.Empty)
             {
-                reply.Thread_TS = ts;
+                reply.Thread_TS = context.Message.Timestamp;
             }
-            if (thread != null && thread != String.Empty)
+            if (context.Message.Thread_TS != null && context.Message.Thread_TS != String.Empty)
             {
-               reply.Thread_TS = thread;
+               reply.Thread_TS = context.Message.Thread_TS;
             }
 
             return reply;

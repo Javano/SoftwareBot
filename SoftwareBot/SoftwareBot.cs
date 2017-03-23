@@ -69,13 +69,13 @@ namespace SoftwareBot
 
             Console.Error.WriteLine("Loading responders. \n");
             Responders.Add(usernameCache);
-            //Responders.Add(new ReactResponder());
+            Responders.Add(new AdminResponder(this));
+            Responders.Add(new ReactionResponder());
             Responders.Add(new HelpResponder(Responders));
             //Responders.Add(new ReactionResponder());
             //Responders.Add(new SchedulerResponder(scheduledItems));
             Responders.Add(new TaskResponder());
             Responders.Add(new ChatResponder(CLEVERBOT_API_KEY));
-            //Responders.Add(new AdminResponder(this));
             //Responders.Add(new TfsBuildResponder());
             Responders.Add(new OneNoteResponder());
 

@@ -13,13 +13,6 @@ namespace SoftwareBot
         public ReactionResponder()
         {
             reactDict.Add("bork", "gabe");
-            reactDict.Add("gabe", "gabe");
-            reactDict.Add("doggo", "gabe");
-            reactDict.Add("pupper", "gabe");
-            reactDict.Add("bug", "feature");
-            reactDict.Add("doge", "doge");
-            reactDict.Add("roll", "rolling");
-            reactDict.Add("easy", "easy_button");
         }
 
  
