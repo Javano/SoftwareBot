@@ -18,7 +18,7 @@ namespace SoftwareBot
         {
             return !context.BotHasResponded
                 && context.Message.MentionsBot
-                  && (context.Message.Text.ToLower().Contains("help") || context.Message.Text.ToLower().Contains("commands"));
+                  && (context.Message.Text.ToLower().Contains("/help") || context.Message.Text.ToLower().Contains("/commands"));
         }
 
 

@@ -6,10 +6,23 @@ namespace SoftwareBot
 {
     public class UsernameCacheResponder : SBResponder
     {
-        public IReadOnlyDictionary<string, string> userNameCache = new Dictionary<string, string>();
+        public Dictionary<string, string> userNameCache = new Dictionary<string, string>();
+
+        public UsernameCacheResponder()
+        {
+            userNameCache.Add("B2HJYASGJ", "a web hook thing, I think");
+            userNameCache.Add("B371F3CBB", "rollout");
+            
+        }
         public override bool CanRespond(ResponseContext context)
         {
-            userNameCache = context.UserNameCache;
+            foreach (KeyValuePair<string,string> kv in context.UserNameCache)
+            {
+                if (!userNameCache.ContainsKey(kv.Key))
+                {
+                    userNameCache.Add(kv.Key, kv.Value);
+                }
+            }
             return false;
         }
 

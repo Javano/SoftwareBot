@@ -23,6 +23,7 @@ namespace SoftwareBot
 
         public override BotReaction GetReaction(ResponseContext context)
         {
+            BotReaction reaction = new BotReaction { Name = "white_check_mark", Timestamp = context.Message.Timestamp, ChatHub= context.Message.ChatHub };
             string messageStr = context.Message.Text.ToLower();
             if (messageStr.Contains("/delete"))
             {
@@ -30,10 +31,15 @@ namespace SoftwareBot
             }
             else if (messageStr.Contains("/kill"))
             {
-                bot.Disconnect();
-                Environment.Exit(123);
+                ReactAndKill(reaction);
             }
-                return new BotReaction { Name = "white_check_mark", Timestamp=context.Message.Timestamp };
+                return reaction;
+        }
+        private async void ReactAndKill(BotReaction reaction)
+        {
+            await bot.React(reaction);
+            bot.Disconnect();
+            Environment.Exit(123);
         }
 
         public override string ToString()

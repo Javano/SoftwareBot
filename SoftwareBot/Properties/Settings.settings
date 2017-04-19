@@ -6,7 +6,7 @@
       <Value Profile="(Default)">123123</Value>
     </Setting>
     <Setting Name="BUILD_DATE" Type="System.DateTime" Scope="User">
-      <Value Profile="(Default)">03/10/2017 10:46:00</Value>
+      <Value Profile="(Default)">04/19/2017 13:34:00</Value>
     </Setting>
   </Settings>
 </SettingsFile>

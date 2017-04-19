@@ -21,7 +21,7 @@ namespace SoftwareBot
         {
             // Redirecting Console.Out to null because the MargieBot library likes to spam Console.Out with garbage, for some reason. 
             // Redirecting Console.Err to Console.Out so we can use "Console.Error.WriteLine()" instead of "Console.WriteLine()" to solve this problem.
-            Console.SetError(Console.Out); 
+            Console.SetError(Console.Out);
             Console.SetOut(TextWriter.Null);
             Console.Error.WriteLine("Hello, I am SoftwareBot. -- I was unleashed upon the world by Adam Carruthers.\n");
             Console.Error.WriteLine("My build date is: " + Properties.Settings.Default.BUILD_DATE + "\n");
@@ -50,7 +50,8 @@ namespace SoftwareBot
                 if (IsConnected)
                 {
                     Console.Error.WriteLine("I have successfully connected to the Slack network.\n");
-                } else
+                }
+                else
                 {
 
                     Console.Error.WriteLine("I encountered errors with my connection to the Slack network.\n");
@@ -94,186 +95,221 @@ namespace SoftwareBot
 
 
                     string type = (string)jObj["type"];
-                    if (type != null && type == "message")
+                    string subtype = (string)jObj["subtype"];
+
+                    switch (type)
                     {
-                        string userID = (string)jObj["user"];
+                        case ("message"):
 
-                        if (userID != null && usernameCache.userNameCache.ContainsKey(userID))
-                        {
-                            //  Console.Error.WriteLine("[" + DateTime.Now + "] - " + timeResponder.userNameCache[(string)jObj["user"]] + ": " + jObj["text"]);
-                            Console.Error.WriteLine("[" + DateTime.Now + "] - " + usernameCache.userNameCache[(string)jObj["user"]] + " <MESSAGE RECEIVED>");
-                        }
-                        else
-                        {
+                            string username = (string)jObj["user"];
+                            string botID = (string)jObj["bot_id"];
 
-                            //  Console.Error.WriteLine("[" + DateTime.Now + "] - " + (string)jObj["user"] + ": " + jObj["text"]);
-                            Console.Error.WriteLine("[" + DateTime.Now + "] - " + (string)jObj["user"] + " <MESSAGE RECEIVED>");
-                        }
+                            if (String.IsNullOrWhiteSpace(username) && !String.IsNullOrWhiteSpace(botID))
+                            {
+                                username = botID;
+                            } else if (jObj["message"] != null && jObj["message"]["user"] != null)
+                            {
+                                username = (string)jObj["message"]["user"];
+                            }
+                            else if (jObj["previous_message"] != null && jObj["previous_message"]["user"] != null)
+                            {
+                                username = (string)jObj["previous_message"]["user"];
+                            }
 
+                            if (!String.IsNullOrWhiteSpace(username) && usernameCache.userNameCache.ContainsKey(username))
+                            {
+                                //  Console.Error.WriteLine("[" + DateTime.Now + "] - " + timeResponder.userNameCache[(string)jObj["user"]] + ": " + jObj["text"]);
+                                username = usernameCache.userNameCache[username];
+                            }
+                            string channelID = (string)jObj["channel"];
+
+                            switch (subtype)
+                            {
+                                case ("message_changed"):
+                                    Console.Error.WriteLine("[" + DateTime.Now + "] " + "[" + channelID + "] " + username + " <MESSAGE CHANGED>");
+                                    break;
+                                case ("message_deleted"):
+                                    Console.Error.WriteLine("[" + DateTime.Now + "] " + "[" + channelID + "] " + username + " <MESSAGE DELETED>");
+                                    break;
+                                default:
+                                    Console.Error.WriteLine("[" + DateTime.Now + "] " + "[" + channelID + "] " + username + " <MESSAGE RECEIVED>");
+                                    if (String.IsNullOrWhiteSpace(username))
+                                    {
+                                        Console.Error.WriteLine(jObj);
+                                    }
+                                    break;
+
+                            }
+                            break;
+                        default:
+                            break;
                     }
+                    
 
 
                 }
                 catch (Exception ex)
-                {
-                    Console.Error.WriteLine(ex.ToString());
-                }
-                // the messageData parameter contains the complete json message the bot receives from Slack
-                // this is fired each time your bot receives a message, which, let me tell you, will be often
-            };
+            {
+                Console.Error.WriteLine(ex.ToString());
+            }
+            // the messageData parameter contains the complete json message the bot receives from Slack
+            // this is fired each time your bot receives a message, which, let me tell you, will be often
+        };
 
 
 
 
-            Console.Error.WriteLine("Attempting to connect to Slack now...\n");
+        Console.Error.WriteLine("Attempting to connect to Slack now...\n");
 
             DoConnect();
 
 
 
-        }
-        private void CheckScheduledEvents()
-        {
-            /* try
-             {
+    }
+    private void CheckScheduledEvents()
+    {
+        /* try
+         {
 
-                 foreach (ScheduledItem si in scheduledItems.ToList())
-                 {
-                     if (si != null)
-                         if (DateTime.Now > si.Date)
+             foreach (ScheduledItem si in scheduledItems.ToList())
+             {
+                 if (si != null)
+                     if (DateTime.Now > si.Date)
+                     {
+
+                         Say(new BotMessage() { Text = si.Content, ChatHub = si.ChatHub });
+                         scheduledItems.Remove(si);
+                         if (si.IsResechedulable)
                          {
-
-                             Say(new BotMessage() { Text = si.Content, ChatHub = si.ChatHub });
-                             scheduledItems.Remove(si);
-                             if (si.IsResechedulable)
-                             {
-                                 si.reschedule();
-                                 scheduledItems.Add(si);
-                             }
+                             si.reschedule();
+                             scheduledItems.Add(si);
                          }
-                 }
+                     }
+             }
 
 
-             } catch(InvalidOperationException ex)
-             {
-                 console.WriteLine("INVALID OPERATION EXCEPTION!");
-             }*/
-        }
-        private void ScheduledItemsChanged(object sender, EventArgs e)
+         } catch(InvalidOperationException ex)
+         {
+             console.WriteLine("INVALID OPERATION EXCEPTION!");
+         }*/
+    }
+    private void ScheduledItemsChanged(object sender, EventArgs e)
+    {
+        try
         {
-            try
+            using (Stream stream = File.Open("schedule.SWB", FileMode.Create))
             {
-                using (Stream stream = File.Open("schedule.SWB", FileMode.Create))
-                {
-                    BinaryFormatter bin = new BinaryFormatter();
-                    bin.Serialize(stream, scheduledItems);
-                }
-                Console.Error.WriteLine("SAVING SCHEDULED ITEMS COMPLETE: " + scheduledItems.Count());
+                BinaryFormatter bin = new BinaryFormatter();
+                bin.Serialize(stream, scheduledItems);
             }
-            catch (IOException ex)
-            {
-                Console.Error.WriteLine(ex.ToString());
-            }
+            Console.Error.WriteLine("SAVING SCHEDULED ITEMS COMPLETE: " + scheduledItems.Count());
         }
-        private void LoadScheduledItems()
+        catch (IOException ex)
         {
-            try
-            {
-                using (Stream stream = File.Open("schedule.SWB", FileMode.Open))
-                {
-                    BinaryFormatter bin = new BinaryFormatter();
-
-                    foreach (ScheduledItem si in (BindingList<ScheduledItem>)bin.Deserialize(stream))
-                    {
-                        scheduledItems.Add(si);
-                    }
-
-                }
-                Console.Error.WriteLine("LOADING SCHEDULED ITEMS COMPLETE: " + scheduledItems.Count());
-            }
-            catch (IOException ex)
-            {
-                Console.Error.WriteLine(ex.ToString());
-            }
-        }
-        public void DoCommand(string command)
-        {
-            if (!IsConnected)
-            {
-                Console.Error.WriteLine("There's a problem with my connection to Slack.\n");
-                Console.Error.WriteLine("Trying to reconnect now.\n");
-                try
-                {
-                    DoConnect();
-                } catch(Exception ex)
-                {
-                    Console.Error.WriteLine("Connection attempt failed! Press ENTER if you would like me to try again.\n" + "[" + ex.Message + "]\n");
-                }
-            } else
-            {
-
-                Console.Error.WriteLine("I am connected to the Slack network.\n");
-            }
-            /*
-               if (command != null && command != "")
-            {
-                switch (command)
-                {
-                    case ("close"):
-                        break;
-                    default:
-                        BotMessage message = new BotMessage();
-                        message.Text = command;
-
-                        console.WriteLine("");
-                        console.WriteLine("> Available channels:");
-
-                        int counter = 1;
-                        List<SlackChatHub> hubs = new List<SlackChatHub>();
-                        foreach (SlackChatHub hub in ConnectedChannels)
-                        {
-                            console.WriteLine("> [" + counter + "] - " + hub.Name);
-                            hubs.Add(hub);
-                            counter++;
-                        }
-                        foreach (SlackChatHub dm in ConnectedDMs)
-                        {
-                            console.WriteLine("> [" + counter + "] - " + dm.Name);
-                            hubs.Add(dm);
-                            counter++;
-                        }
-                        int index = -1;
-                        string channelInput = "";
-                        while ((index < 1 || index >= counter) && !channelInput.Equals("close"))
-                        {
-                            console.WriteLine("");
-                            console.WriteLine("> Please select a channel: (1-" + (counter - 1) + ")");
-                            channelInput = console.ReadLine().ToLower();
-                            Int32.TryParse(channelInput, out index);
-                        }
-
-                        if (channelInput.Equals("close"))
-                        {
-                            console.WriteLine("");
-                            console.WriteLine("> Command cancelled.");
-                        }
-                        else
-                        {
-                            message.ChatHub = hubs[index - 1];
-                            Say(message);
-                        }
-
-                        break;
-                }
-            }  
-
-            ************* DISABLED BECAUSE WE CAN'T HAVE NICE THINGS*/
-
-        }
-
-        private async void DoConnect()
-        {
-            await Connect(API_KEY);
+            Console.Error.WriteLine(ex.ToString());
         }
     }
+    private void LoadScheduledItems()
+    {
+        try
+        {
+            using (Stream stream = File.Open("schedule.SWB", FileMode.Open))
+            {
+                BinaryFormatter bin = new BinaryFormatter();
+
+                foreach (ScheduledItem si in (BindingList<ScheduledItem>)bin.Deserialize(stream))
+                {
+                    scheduledItems.Add(si);
+                }
+
+            }
+            Console.Error.WriteLine("LOADING SCHEDULED ITEMS COMPLETE: " + scheduledItems.Count());
+        }
+        catch (IOException ex)
+        {
+            Console.Error.WriteLine(ex.ToString());
+        }
+    }
+    public void DoCommand(string command)
+    {
+        if (!IsConnected)
+        {
+            Console.Error.WriteLine("There's a problem with my connection to Slack.\n");
+            Console.Error.WriteLine("Trying to reconnect now.\n");
+            try
+            {
+                DoConnect();
+            }
+            catch (Exception ex)
+            {
+                Console.Error.WriteLine("Connection attempt failed! Press ENTER if you would like me to try again.\n" + "[" + ex.Message + "]\n");
+            }
+        }
+        else
+        {
+
+            Console.Error.WriteLine("I am connected to the Slack network.\n");
+        }
+        /*
+           if (command != null && command != "")
+        {
+            switch (command)
+            {
+                case ("close"):
+                    break;
+                default:
+                    BotMessage message = new BotMessage();
+                    message.Text = command;
+
+                    console.WriteLine("");
+                    console.WriteLine("> Available channels:");
+
+                    int counter = 1;
+                    List<SlackChatHub> hubs = new List<SlackChatHub>();
+                    foreach (SlackChatHub hub in ConnectedChannels)
+                    {
+                        console.WriteLine("> [" + counter + "] - " + hub.Name);
+                        hubs.Add(hub);
+                        counter++;
+                    }
+                    foreach (SlackChatHub dm in ConnectedDMs)
+                    {
+                        console.WriteLine("> [" + counter + "] - " + dm.Name);
+                        hubs.Add(dm);
+                        counter++;
+                    }
+                    int index = -1;
+                    string channelInput = "";
+                    while ((index < 1 || index >= counter) && !channelInput.Equals("close"))
+                    {
+                        console.WriteLine("");
+                        console.WriteLine("> Please select a channel: (1-" + (counter - 1) + ")");
+                        channelInput = console.ReadLine().ToLower();
+                        Int32.TryParse(channelInput, out index);
+                    }
+
+                    if (channelInput.Equals("close"))
+                    {
+                        console.WriteLine("");
+                        console.WriteLine("> Command cancelled.");
+                    }
+                    else
+                    {
+                        message.ChatHub = hubs[index - 1];
+                        Say(message);
+                    }
+
+                    break;
+            }
+        }  
+
+        ************* DISABLED BECAUSE WE CAN'T HAVE NICE THINGS*/
+
+    }
+
+    private async void DoConnect()
+    {
+        await Connect(API_KEY);
+    }
+}
 }
