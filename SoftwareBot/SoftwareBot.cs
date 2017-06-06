@@ -19,23 +19,6 @@ namespace SoftwareBot
         Timer timer;
         public SoftwareBot()
         {
-            // Redirecting Console.Out to null because the MargieBot library likes to spam Console.Out with garbage, for some reason. 
-            // Redirecting Console.Err to Console.Out so we can use "Console.Error.WriteLine()" instead of "Console.WriteLine()" to solve this problem.
-            Console.SetError(Console.Out);
-            Console.SetOut(TextWriter.Null);
-
-            DateTime BUILD_DATE = DateTime.MinValue;
-
-            try
-            {
-                BUILD_DATE = Properties.Settings.Default.BUILD_DATE;
-            } catch (Exception e)
-            {
-                Console.Error.WriteLine("ERROR: Could not load Build Date. " + e.Message);
-            }
-            Console.Error.WriteLine("Hello, I am SoftwareBot. -- I was unleashed upon the world by Adam Carruthers.\n");
-            Console.Error.WriteLine("My build date is: " + BUILD_DATE + "\n");
-
             System.IO.StreamReader file = new System.IO.StreamReader("api.key");
             API_KEY = file.ReadLine();
             Console.Error.WriteLine("Slack API Key found. \n");
@@ -139,6 +122,8 @@ namespace SoftwareBot
                                     Console.Error.WriteLine("[" + DateTime.Now + "] " + "[" + channelID + "] " + username + " <MESSAGE CHANGED>");
                                     break;
                                 case ("message_deleted"):
+                                    string test = null;
+                                    test.Count();
                                     Console.Error.WriteLine("[" + DateTime.Now + "] " + "[" + channelID + "] " + username + " <MESSAGE DELETED>");
                                     break;
                                 default:

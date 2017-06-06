@@ -172,6 +172,7 @@ namespace SoftwareBot
                 message.Attachments.Add(attachment);
             }
 
+
             // Manually fetch message JSON
             dynamic rData = Newtonsoft.Json.JsonConvert.DeserializeObject(context.Message.RawData);
 
